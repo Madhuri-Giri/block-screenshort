@@ -3,138 +3,153 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Screenshot Protection Demo</title>
+    <title>Confidential Design Content</title>
 
     <style>
-      /* ===== BASIC RESET ===== */
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
       }
 
-      /* ===== DISABLE TEXT SELECTION ===== */
       body {
         font-family: Arial, sans-serif;
+        background: #eef1f4;
         user-select: none;
         -webkit-user-select: none;
         -ms-user-select: none;
-        background: #f4f6f8;
       }
 
-      /* ===== MAIN CONTENT ===== */
-      .container {
-        padding: 50px;
+      .wrapper {
+        padding: 40px;
         text-align: center;
       }
 
       h1 {
-        color: #222;
-        margin-bottom: 15px;
+        font-size: 32px;
+        margin-bottom: 20px;
+        color: #111;
       }
 
       p {
+        margin: 15px auto;
+        max-width: 700px;
         font-size: 18px;
-        color: #555;
+        color: #444;
+        line-height: 1.6;
       }
 
-      /* ===== BLUR EFFECT ===== */
-      .blur {
-        filter: blur(12px);
-        transition: filter 0.3s ease;
-      }
-
-      /* ===== BLOCK MESSAGE ===== */
-      .blocked {
-        position: fixed;
-        inset: 0;
-        background: #000;
-        color: #fff;
+      .images {
+        margin-top: 30px;
         display: flex;
         justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .images img {
+        width: 320px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 6px;
+        pointer-events: none;
+      }
+
+      /* Blur Class */
+      .blurred {
+        filter: blur(12px);
+        transition: 0.3s ease;
+      }
+
+      /* Overlay Block Message */
+      #blocker {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.95);
+        color: #fff;
+        display: none;
+        justify-content: center;
         align-items: center;
-        font-size: 28px;
-        z-index: 10000;
+        font-size: 32px;
+        z-index: 9999;
       }
     </style>
   </head>
 
   <body>
-    <div id="content" class="container">
-      <h1>Protected Content</h1>
+    <div class="wrapper" id="content">
+      <h1>Confidential Design Content</h1>
+
       <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio animi
-        consequuntur, rem optio corrupti fuga. Adipisci cupiditate vero
-        doloremque consequuntur veritatis. Officia repudiandae consequuntur
-        fugiat sed omnis aut esse harum dolorum nobis dolore fuga eius nisi modi
-        obcaecati labore ipsum minima eligendi fugit, quibusdam velit. Nihil
-        incidunt blanditiis dolor eum!
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi,
+        tenetur. Saepe itaque qui enim dolorum quam atque est, nostrum possimus
+        accusantium, vero ipsa nam harum alias consequatur, debitis illum magnam
+        rerum laboriosam eum molestias. Corporis, amet nihil vel beatae fuga,
+        assumenda minus alias reprehenderit expedita error perferendis fugiat
+        accusamus architecto?
       </p>
+
+      <div class="images">
+        <img
+          src="https://tse3.mm.bing.net/th/id/OIP.eh5RRJ5l1pqHQDN1ubb1VAHaEx?pid=Api&h=220&P=0"
+          alt="img1"
+        />
+        <img
+          src="https://tse1.mm.bing.net/th/id/OIP.zB1rsS80G2GPbY0mMvKnigHaEK?pid=Api&h=220&P=0"
+          alt="img2"
+        />
+        <img
+          src="https://tse4.mm.bing.net/th/id/OIP.IDq8cZVcGfgwgkR1Bt0RywHaEo?pid=Api&h=220&P=0"
+          alt="img3"
+        />
+      </div>
     </div>
 
-    <script>
-      /* ============================== DISABLE RIGHT CLICK (FIXED) ============================== */
-      document.oncontextmenu = function () {
-        return false;
-      };
+    <div id="blocker">🚫 Screenshot Blocked</div>
 
-      /* ============================== BLOCK KEYS (FIXED & STRONG) ============================== */
+    <script>
+      /* ========= Disable Right Click ========= */
+      document.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+      });
+
+      /* ========= Disable Developer Tools Keys ========= */
       document.addEventListener("keydown", function (e) {
         // F12
         if (e.key === "F12") {
           e.preventDefault();
-          return false;
         }
 
         // Ctrl + Shift + I / J / C
-        if (
-          e.ctrlKey &&
-          e.shiftKey &&
-          (e.key === "I" || e.key === "J" || e.key === "C")
-        ) {
+        if (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key)) {
           e.preventDefault();
-          return false;
         }
 
-        // Ctrl + U
+        // Ctrl + U (view-source)
         if (e.ctrlKey && e.key === "u") {
           e.preventDefault();
-          return false;
         }
 
-        // Ctrl + S
-        if (e.ctrlKey && e.key === "s") {
-          e.preventDefault();
-          return false;
-        }
-
-        // Print Screen
+        // PrintScreen detection
         if (e.key === "PrintScreen") {
-          e.preventDefault();
-          blockScreen();
-          return false;
+          showBlocker();
         }
       });
 
-      /* ============================== EXTRA SAFETY: KEYUP ============================== */
+      /* ========= Extra PrintScreen Protection ========= */
       document.addEventListener("keyup", function (e) {
         if (e.key === "PrintScreen") {
-          navigator.clipboard.writeText("");
-          blockScreen();
+          navigator.clipboard.writeText(""); // Clear capture
+          showBlocker();
         }
       });
 
-      /* ============================== BLUR ON TAB SWITCH ============================== */
+      /* ========= Blur Page When Tab Loses Focus ========= */
       document.addEventListener("visibilitychange", function () {
-        if (document.hidden) {
-          document.body.style.filter = "blur(12px)";
-        } else {
-          document.body.style.filter = "none";
-        }
+        document.body.classList.toggle("blurred", document.hidden);
       });
 
-      document.addEventListener("contextmenu", (e) => e.preventDefault());
-
+      /* ========= Block Multi-Touch on Mobile ========= */
       document.addEventListener(
         "touchstart",
         function (e) {
@@ -145,45 +160,23 @@
         { passive: false }
       );
 
-      document.addEventListener("selectstart", (e) => e.preventDefault());
-
+      /* ========= Fake Screenshot Detector for 3-Finger ========= */
       document.addEventListener("touchstart", function (e) {
         if (e.touches.length >= 3) {
-          document.body.style.filter = "blur(20px)";
-          alert("Screenshot not allowed!");
+          showBlocker();
         }
       });
 
-      document.addEventListener("visibilitychange", () => {
-        if (document.hidden) {
-          document.body.style.filter = "blur(20px)";
-        } else {
-          document.body.style.filter = "none";
-        }
-      });
-
-      /* ============================== BLOCK SCREEN UI ============================== */
-      function blockScreen() {
-        let block = document.createElement("div");
-        block.style.position = "fixed";
-        block.style.top = "0";
-        block.style.left = "0";
-        block.style.width = "100%";
-        block.style.height = "100%";
-        block.style.background = "#000";
-        block.style.color = "#fff";
-        block.style.zIndex = "99999";
-        block.style.display = "flex";
-        block.style.alignItems = "center";
-        block.style.justifyContent = "center";
-        block.style.fontSize = "28px";
-        block.innerText = "🚫 Screenshot Detected!";
-
-        document.body.appendChild(block);
+      /* ========= Function: Show Blocking Screen ========= */
+      function showBlocker() {
+        const blk = document.getElementById("blocker");
+        blk.style.display = "flex";
+        document.getElementById("content").classList.add("blurred");
 
         setTimeout(() => {
-          block.remove();
-        }, 2000);
+          blk.style.display = "none";
+          document.getElementById("content").classList.remove("blurred");
+        }, 1800);
       }
     </script>
   </body>
