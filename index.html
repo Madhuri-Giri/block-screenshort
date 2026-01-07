@@ -60,26 +60,25 @@
   </head>
 
   <body>
-    <!-- CONTENT -->
     <div id="content" class="container">
       <h1>Protected Content</h1>
       <p>
-        This page is protected against screenshots using JavaScript techniques.
-        Screenshots cannot be fully blocked, but this discourages misuse.
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio animi
+        consequuntur, rem optio corrupti fuga. Adipisci cupiditate vero
+        doloremque consequuntur veritatis. Officia repudiandae consequuntur
+        fugiat sed omnis aut esse harum dolorum nobis dolore fuga eius nisi modi
+        obcaecati labore ipsum minima eligendi fugit, quibusdam velit. Nihil
+        incidunt blanditiis dolor eum!
       </p>
     </div>
 
     <script>
-      /* ==============================
-     DISABLE RIGHT CLICK (FIXED)
-  ============================== */
+      /* ============================== DISABLE RIGHT CLICK (FIXED) ============================== */
       document.oncontextmenu = function () {
         return false;
       };
 
-      /* ==============================
-     BLOCK KEYS (FIXED & STRONG)
-  ============================== */
+      /* ============================== BLOCK KEYS (FIXED & STRONG) ============================== */
       document.addEventListener("keydown", function (e) {
         // F12
         if (e.key === "F12") {
@@ -117,9 +116,7 @@
         }
       });
 
-      /* ==============================
-     EXTRA SAFETY: KEYUP
-  ============================== */
+      /* ============================== EXTRA SAFETY: KEYUP ============================== */
       document.addEventListener("keyup", function (e) {
         if (e.key === "PrintScreen") {
           navigator.clipboard.writeText("");
@@ -127,9 +124,7 @@
         }
       });
 
-      /* ==============================
-     BLUR ON TAB SWITCH
-  ============================== */
+      /* ============================== BLUR ON TAB SWITCH ============================== */
       document.addEventListener("visibilitychange", function () {
         if (document.hidden) {
           document.body.style.filter = "blur(12px)";
@@ -167,9 +162,7 @@
         }
       });
 
-      /* ==============================
-     BLOCK SCREEN UI
-  ============================== */
+      /* ============================== BLOCK SCREEN UI ============================== */
       function blockScreen() {
         let block = document.createElement("div");
         block.style.position = "fixed";
