@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Screenshot Protection Demo</title>
+
+    <style>
+      /* ===== BASIC RESET ===== */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* ===== DISABLE TEXT SELECTION ===== */
+      body {
+        font-family: Arial, sans-serif;
+        user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        background: #f4f6f8;
+      }
+
+      /* ===== MAIN CONTENT ===== */
+      .container {
+        padding: 50px;
+        text-align: center;
+      }
+
+      h1 {
+        color: #222;
+        margin-bottom: 15px;
+      }
+
+      p {
+        font-size: 18px;
+        color: #555;
+      }
+
+      /* ===== BLUR EFFECT ===== */
+      .blur {
+        filter: blur(12px);
+        transition: filter 0.3s ease;
+      }
+
+      /* ===== BLOCK MESSAGE ===== */
+      .blocked {
+        position: fixed;
+        inset: 0;
+        background: #000;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 28px;
+        z-index: 10000;
+      }
+    </style>
+  </head>
+
+  <body>
+  
+    <!-- CONTENT -->
+    <div id="content" class="container">
+      <h1>Protected Content</h1>
+      <p>
+       Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta voluptatem culpa dignissimos natus. Voluptatum facere, sed corporis unde porro suscipit similique. Cumque commodi dignissimos perferendis, itaque consequuntur illum vitae adipisci fugit magnam omnis velit dolorum at! Saepe, dolor quod ipsum amet fugiat quam, corrupti eaque consequuntur dicta, aspernatur magni excepturi!
+      </p>
+    </div>
+
+    <script>
+      /* ============================== DISABLE RIGHT CLICK (FIXED) ============================== */
+      document.oncontextmenu = function () {
+        return false;
+      };
+
+      /* ============================== BLOCK KEYS (FIXED & STRONG) ============================== */
+      document.addEventListener("keydown", function (e) {
+        // F12
+        if (e.key === "F12") {
+          e.preventDefault();
+          return false;
+        }
+
+        // Ctrl + Shift + I / J / C
+        if (
+          e.ctrlKey &&
+          e.shiftKey &&
+          (e.key === "I" || e.key === "J" || e.key === "C")
+        ) {
+          e.preventDefault();
+          return false;
+        }
+
+        // Ctrl + U
+        if (e.ctrlKey && e.key === "u") {
+          e.preventDefault();
+          return false;
+        }
+
+        // Ctrl + S
+        if (e.ctrlKey && e.key === "s") {
+          e.preventDefault();
+          return false;
+        }
+
+        // Print Screen
+        if (e.key === "PrintScreen") {
+          e.preventDefault();
+          blockScreen();
+          return false;
+        }
+      });
+
+      /* ============================== EXTRA SAFETY: KEYUP ============================== */
+      document.addEventListener("keyup", function (e) {
+        if (e.key === "PrintScreen") {
+          navigator.clipboard.writeText("");
+          blockScreen();
+        }
+      });
+
+      /* ============================== BLUR ON TAB SWITCH ============================== */
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+          document.body.style.filter = "blur(12px)";
+        } else {
+          document.body.style.filter = "none";
+        }
+      });
+
+      /* ============================== BLOCK SCREEN UI ============================== */
+      function blockScreen() {
+        let block = document.createElement("div");
+        block.style.position = "fixed";
+        block.style.top = "0";
+        block.style.left = "0";
+        block.style.width = "100%";
+        block.style.height = "100%";
+        block.style.background = "#000";
+        block.style.color = "#fff";
+        block.style.zIndex = "99999";
+        block.style.display = "flex";
+        block.style.alignItems = "center";
+        block.style.justifyContent = "center";
+        block.style.fontSize = "28px";
+        block.innerText = "🚫 Screenshot Detected!";
+
+        document.body.appendChild(block);
+
+        setTimeout(() => {
+          block.remove();
+        }, 2000);
+      }
+    </script>
+  </body>
+</html>
