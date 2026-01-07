@@ -60,22 +60,26 @@
   </head>
 
   <body>
-  
     <!-- CONTENT -->
     <div id="content" class="container">
       <h1>Protected Content</h1>
       <p>
-       Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta voluptatem culpa dignissimos natus. Voluptatum facere, sed corporis unde porro suscipit similique. Cumque commodi dignissimos perferendis, itaque consequuntur illum vitae adipisci fugit magnam omnis velit dolorum at! Saepe, dolor quod ipsum amet fugiat quam, corrupti eaque consequuntur dicta, aspernatur magni excepturi!
+        This page is protected against screenshots using JavaScript techniques.
+        Screenshots cannot be fully blocked, but this discourages misuse.
       </p>
     </div>
 
     <script>
-      /* ============================== DISABLE RIGHT CLICK (FIXED) ============================== */
+      /* ==============================
+     DISABLE RIGHT CLICK (FIXED)
+  ============================== */
       document.oncontextmenu = function () {
         return false;
       };
 
-      /* ============================== BLOCK KEYS (FIXED & STRONG) ============================== */
+      /* ==============================
+     BLOCK KEYS (FIXED & STRONG)
+  ============================== */
       document.addEventListener("keydown", function (e) {
         // F12
         if (e.key === "F12") {
@@ -113,7 +117,9 @@
         }
       });
 
-      /* ============================== EXTRA SAFETY: KEYUP ============================== */
+      /* ==============================
+     EXTRA SAFETY: KEYUP
+  ============================== */
       document.addEventListener("keyup", function (e) {
         if (e.key === "PrintScreen") {
           navigator.clipboard.writeText("");
@@ -121,7 +127,9 @@
         }
       });
 
-      /* ============================== BLUR ON TAB SWITCH ============================== */
+      /* ==============================
+     BLUR ON TAB SWITCH
+  ============================== */
       document.addEventListener("visibilitychange", function () {
         if (document.hidden) {
           document.body.style.filter = "blur(12px)";
@@ -130,7 +138,38 @@
         }
       });
 
-      /* ============================== BLOCK SCREEN UI ============================== */
+      document.addEventListener("contextmenu", (e) => e.preventDefault());
+
+      document.addEventListener(
+        "touchstart",
+        function (e) {
+          if (e.touches.length > 1) {
+            e.preventDefault();
+          }
+        },
+        { passive: false }
+      );
+
+      document.addEventListener("selectstart", (e) => e.preventDefault());
+
+      document.addEventListener("touchstart", function (e) {
+        if (e.touches.length >= 3) {
+          document.body.style.filter = "blur(20px)";
+          alert("Screenshot not allowed!");
+        }
+      });
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          document.body.style.filter = "blur(20px)";
+        } else {
+          document.body.style.filter = "none";
+        }
+      });
+
+      /* ==============================
+     BLOCK SCREEN UI
+  ============================== */
       function blockScreen() {
         let block = document.createElement("div");
         block.style.position = "fixed";
